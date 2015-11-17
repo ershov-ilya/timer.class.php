@@ -40,3 +40,5 @@ $timer->stopAll();
 
 //print_r($timer->data());
 print $timer;
+print $timer(':db:');
+print_r($timer->data());

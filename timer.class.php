@@ -10,15 +10,19 @@
 class Timer
 {
     private $state;
+    private $result;
     private $data;
     private $config;
 
     public function __construct($props=array()){
         $config=array(
-            'delimiter' =>  ':'
+            'query_delimiter'   =>  ':',
+            'output_delimiter'  =>  '=',
+            'add_children_time'  => true
         );
         $this->config=$config=array_merge($config, $props);
         $this->state=array();
+        $this->result=array();
         $this->data=array();
     }
     public function __destruct()
@@ -27,10 +31,11 @@ class Timer
     }
 
     private function parse($name){
-        return explode($this->config['delimiter'], $name);
+        return explode($this->config['query_delimiter'], $name);
     }
 
-    public function start($name=0){
+    public function start($name){
+        if(empty($name)) return false;
         if(isset($this->state[$name]) && $this->state[$name]) {
             if(DEBUG) print "Double start $name - ignore\n";
             return false;
@@ -51,7 +56,8 @@ class Timer
             }
             $level++;
         }
-        $ptr['start']=microtime(true);
+        $ptr['_start']=microtime(true);
+        $ptr['_name']=$name;
         return true;
     }
 
@@ -78,10 +84,10 @@ class Timer
             $level++;
         }
 
-        if(!isset($ptr['time'])) $ptr['time']=array();
-        $time=$stoptime-$ptr['start'];
-        $ptr['time'][]=$time;
-        unset($ptr['start']);
+        if(!isset($ptr['_time'])) $ptr['_time']=array();
+        $time=$stoptime-$ptr['_start'];
+        $ptr['_time'][]=$time;
+        unset($ptr['_start']);
         return true;
     }
 
@@ -94,13 +100,14 @@ class Timer
     public function __toString(){
         $output="";
         if(DEBUG) $output="Debug mode\n";
-        foreach($this->state as $name => $state){
-            $output.="$name=".$this($name)."\n";
+        foreach($this->state as $name => $status){
+            $output.="$name".$this->config['output_delimiter'].$this($name)."\n";
         }
         return $output;
     }
 
     public function __invoke($name){
+        $name=trim($name,$this->config['query_delimiter']);
         $time=microtime(true);
 //        if(DEBUG) print "Invoke method $name\n";
         $path=$this->parse($name);
@@ -118,16 +125,21 @@ class Timer
         }
 
         $total=0;
-        if(isset($ptr['time'])) {
-            foreach ($ptr['time'] as $time) {
+        if(isset($ptr['_time'])) {
+            foreach ($ptr['_time'] as $time) {
                 $total += $time;
             }
         }
-        if($this->state[$name] && isset($ptr['start'])) $total+=$time-$ptr['start'];
+        if(isset($this->state[$name]) && $this->state[$name] && isset($ptr['_start'])) $total+=$time-$ptr['_start'];
+        $this->result[$name]=$total;
         return $total;
     }
 
     public function data(){
         return $this->data;
+    }
+
+    public function result(){
+        return $this->result;
     }
 }
