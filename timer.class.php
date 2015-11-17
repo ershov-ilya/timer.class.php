@@ -57,7 +57,7 @@ class Timer
 
     public function stop($name){
         $stoptime=microtime(true);
-        if(!$this->state[$name]) {
+        if(!isset($this->state[$name]) || !$this->state[$name]) {
             if(DEBUG) print "Double stop $name - ignore\n";
             return false;
         }
