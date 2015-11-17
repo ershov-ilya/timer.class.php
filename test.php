@@ -28,7 +28,7 @@ $timer->start('db:query');
 sleep(1);
 $timer->stop('db:query');
 $timer->stop('db:undefined');
-$timer->start('db:query');
+$timer->start('db:query:parsing');
 sleep(1);
 $timer->stop('db:query');
 $timer->stopAll();

@@ -86,20 +86,7 @@ class Timer
         $name=trim($name,$this->config['query_delimiter']);
         $time=microtime(true);
 
-//        if(DEBUG) print "Invoke method $name\n";
-        $path=$this->parse($name);
-        $ptr=null;
-        $level=0;
-        foreach($path as $node){
-            if($level===0) {
-//                if(!isset($this->data[$node])) $this->data[$node]=array();
-                $ptr =& $this->data[$node];
-            }else{
-//                if(!isset($ptr[$node])) $ptr[$node]=array();
-                $ptr =& $ptr[$node];
-            }
-            $level++;
-        }
+        $ptr =& $this->getNode($name, false);
 
         $total=0;
         if(isset($ptr['_time'])) {
