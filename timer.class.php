@@ -34,8 +34,9 @@ class Timer
         return explode($this->config['query_delimiter'], $name);
     }
 
-    public function start($name){
+    public function start($name, $parents=false){
         if(empty($name)) return false;
+        if($parents) return $this->startParents($name);
         if(isset($this->state[$name]) && $this->state[$name]) {
             if(DEBUG) print "Double start $name - ignore\n";
             return false;
@@ -51,6 +52,19 @@ class Timer
         return true;
     }
 
+    private function startParents($name){
+        $name=trim($name,$this->config['query_delimiter']);
+        $arr=explode($this->config['query_delimiter'], $name);
+        $url=array();
+        $path='';
+        foreach($arr as $node){
+            $url[]=$node;
+            $path=implode($this->config['query_delimiter'],$url);
+            $this->start($path);
+        }
+        return true;
+    }
+
     public function stop($name){
         $stoptime=microtime(true);
         if(!isset($this->state[$name]) || !$this->state[$name]) {
@@ -62,11 +76,22 @@ class Timer
 
         $ptr =& $this->getNode($name);
 
-        if(!isset($ptr['_time'])) $ptr['_time']=array();
         $time=$stoptime-$ptr['_start'];
         $ptr['_time'][]=$time;
         $ptr['_state']='OFF';
         unset($ptr['_start']);
+        return true;
+    }
+
+    public function stopTree($name){
+        $name=trim($name,$this->config['query_delimiter']);
+        foreach($this->state as $timer => $state){
+            if(DEBUG) print "Check $timer\n";
+            if(strpos($timer, $name)>-1){
+                if(DEBUG) print "Match $timer\n";
+                $this->stop($timer);
+            }
+        }
         return true;
     }
 
@@ -115,12 +140,15 @@ class Timer
                     $this->data[$node]=array();
                     $this->data[$node]['_name']=$node;
                     $this->data[$node]['_state']='OFF';
+                    $this->data[$node]['_time']=array();
                 }
                 $ptr =& $this->data[$node];
             }else{
                 if($create && !isset($ptr[$node])) {
                     $ptr[$node]=array();
                     $ptr[$node]['_name']=implode($this->config['query_delimiter'],$url);
+                    $ptr[$node]['_state']='OFF';;
+                    $ptr[$node]['_time']=array();
                 }
                 $ptr =& $ptr[$node];
             }

@@ -11,7 +11,7 @@
 
 
 header( 'Content-Type: text/plain; charset=utf-8' ) ;
-//define('DEBUG' , true) ;
+define('DEBUG' , true) ; // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< Disable DEBUG info here
 defined( 'DEBUG') or define('DEBUG' , false) ;
 
 if( DEBUG ){
@@ -21,25 +21,13 @@ if( DEBUG ){
 
 require_once('timer.class.php');
 $timer=new Timer();
-$timer->start('db:query');
-$timer->start('db:parse');
+$timer->start('mysql:sql:query:response:parsing',true);
+$timer->start('postgres:sql:query:response:parsing');
 sleep(1);
-$timer->start('db:query');
-sleep(1);
-$timer->start('db:query:parsing');
 print_r($timer->data());
-$timer->stop('db:query');
-$timer->stop('db:undefined');
+print $timer;
+$timer->start('file:read');
 sleep(1);
-$timer->stop('db:query');
-$timer->stopAll();
-$timer->start('db:undefined');
-sleep(1.5);
-print $timer;
-sleep(1.5);
-$timer->stopAll();
-
-//print_r($timer->data());
-print $timer;
+$timer->stopTree('mysql');
 print_r($timer->data());
 
