@@ -25,5 +25,6 @@ $timer->start('db:query');
 $timer->start('db:parse');
 sleep(2);
 $timer->stop('db:query');
-print $timer;
+$timer->stopAll();
 print_r($timer->data());
+print $timer;

@@ -32,11 +32,14 @@ class Timer
     }
 
     public function start($name=0){
+        if($this->state[$name]) {
+            if(DEBUG) print "Double start $name\n";
+            return false;
+        }
         if(DEBUG) print "Start $name\n";
-        $doublestart=false;
-        if($this->state[$name]) $doublestart=true;
         $this->state[$name]=true;
         $time=microtime(true);
+
         $path=$this->parse($name);
         $ptr=null;
         $level=0;
@@ -50,17 +53,36 @@ class Timer
             }
             $level++;
         }
-        $ptr=array('start');
+        $ptr['start']=microtime(true);
 //        $this->start_time=microtime(true);
+        return true;
     }
 
     public function stop($name){
+        if($this->state[$name]===false) {
+            if(DEBUG) print "Double stop $name\n";
+            return false;
+        }
         if(DEBUG) print "Stop $name\n";
-        $doublestop=false;
-        if($this->state[$name]===false) $doublestop=true;
         $this->state[$name]=false;
         $time=microtime(true);
         $path=$this->parse($name);
+
+        $path=$this->parse($name);
+        $ptr=null;
+        $level=0;
+        foreach($path as $node){
+            if($level===0) {
+                if(!isset($this->data[$node])) $this->data[$node]=array();
+                $ptr =& $this->data[$node];
+            }else{
+                if(!isset($ptr[$node])) $ptr[$node]=array();
+                $ptr =& $ptr[$node];
+            }
+            $level++;
+        }
+        $ptr['stop']=microtime(true);
+        return true;
     }
 
     public function stopAll(){
