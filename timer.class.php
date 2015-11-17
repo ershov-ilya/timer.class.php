@@ -43,21 +43,9 @@ class Timer
         if(DEBUG) print "Start $name\n";
         $this->state[$name]=true;
 
-        $path=$this->parse($name);
-        $ptr=null;
-        $level=0;
-        foreach($path as $node){
-            if($level===0) {
-                if(!isset($this->data[$node])) $this->data[$node]=array();
-                $ptr =& $this->data[$node];
-            }else{
-                if(!isset($ptr[$node])) $ptr[$node]=array();
-                $ptr =& $ptr[$node];
-            }
-            $level++;
-        }
+        $ptr =& $this->getNode($name);
+
         $ptr['_start']=microtime(true);
-        $ptr['_name']=$name;
         return true;
     }
 
@@ -70,19 +58,7 @@ class Timer
         if(DEBUG) print "Stop $name\n";
         $this->state[$name]=false;
 
-        $path=$this->parse($name);
-        $ptr=null;
-        $level=0;
-        foreach($path as $node){
-            if($level===0) {
-//                if(!isset($this->data[$node])) $this->data[$node]=array();
-                $ptr =& $this->data[$node];
-            }else{
-//                if(!isset($ptr[$node])) $ptr[$node]=array();
-                $ptr =& $ptr[$node];
-            }
-            $level++;
-        }
+        $ptr =& $this->getNode($name, false);
 
         if(!isset($ptr['_time'])) $ptr['_time']=array();
         $time=$stoptime-$ptr['_start'];
@@ -109,6 +85,7 @@ class Timer
     public function __invoke($name){
         $name=trim($name,$this->config['query_delimiter']);
         $time=microtime(true);
+
 //        if(DEBUG) print "Invoke method $name\n";
         $path=$this->parse($name);
         $ptr=null;
@@ -133,6 +110,32 @@ class Timer
         if(isset($this->state[$name]) && $this->state[$name] && isset($ptr['_start'])) $total+=$time-$ptr['_start'];
         $this->result[$name]=$total;
         return $total;
+    }
+
+    private function &getNode($name, $create=true){
+        $name=trim($name,$this->config['query_delimiter']);
+        $path=$this->parse($name);
+        $ptr=null;
+        $level=0;
+        $url=array();
+        foreach($path as $node){
+            $url[]=$node;
+            if($level===0) {
+                if($create && !isset($this->data[$node])) {
+                    $this->data[$node]=array();
+                    $this->data[$node]['_name']=$node;
+                }
+                $ptr =& $this->data[$node];
+            }else{
+                if($create && !isset($ptr[$node])) {
+                    $ptr[$node]=array();
+                    $ptr[$node]['_name']=implode($this->config['query_delimiter'],$url);
+                }
+                $ptr =& $ptr[$node];
+            }
+            $level++;
+        }
+        return $ptr;
     }
 
     public function data(){
