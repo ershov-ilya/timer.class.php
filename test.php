@@ -15,7 +15,7 @@ define('DEBUG' , true) ;
 defined( 'DEBUG') or define('DEBUG' , false) ;
 
 if( DEBUG ){
-    error_reporting(E_ALL ) ;
+    error_reporting(E_ERROR | E_WARNING ) ;
     ini_set( "display_errors" , 1 ) ;
 }
 
