@@ -38,7 +38,6 @@ class Timer
         }
         if(DEBUG) print "Start $name\n";
         $this->state[$name]=true;
-        $time=microtime(true);
 
         $path=$this->parse($name);
         $ptr=null;
@@ -54,38 +53,41 @@ class Timer
             $level++;
         }
         $ptr['start']=microtime(true);
-//        $this->start_time=microtime(true);
         return true;
     }
 
     public function stop($name){
-        if($this->state[$name]===false) {
+        $stoptime=microtime(true);
+        if(!$this->state[$name]) {
             if(DEBUG) print "Double stop $name\n";
             return false;
         }
         if(DEBUG) print "Stop $name\n";
         $this->state[$name]=false;
-        $time=microtime(true);
-        $path=$this->parse($name);
 
         $path=$this->parse($name);
         $ptr=null;
         $level=0;
         foreach($path as $node){
             if($level===0) {
-                if(!isset($this->data[$node])) $this->data[$node]=array();
+//                if(!isset($this->data[$node])) $this->data[$node]=array();
                 $ptr =& $this->data[$node];
             }else{
-                if(!isset($ptr[$node])) $ptr[$node]=array();
+//                if(!isset($ptr[$node])) $ptr[$node]=array();
                 $ptr =& $ptr[$node];
             }
             $level++;
         }
-        $ptr['stop']=microtime(true);
+
+        if(!isset($ptr['time'])) $ptr['time']=array();
+        $time=$stoptime-$ptr['start'];
+        $ptr['time'][]=$time;
+        unset($ptr['start']);
         return true;
     }
 
     public function stopAll(){
+        if(DEBUG) print "Stop all $name\n";
         foreach($this->state as $k=>$v){
             if($v===true) $this->stop($k);
         }
@@ -96,7 +98,27 @@ class Timer
         return $output;
     }
 
-    public function __invoke(){
+    public function __invoke($name){
+        if(DEBUG) print "Invoke method $name\n";
+        $path=$this->parse($name);
+        $ptr=null;
+        $level=0;
+        foreach($path as $node){
+            if($level===0) {
+//                if(!isset($this->data[$node])) $this->data[$node]=array();
+                $ptr =& $this->data[$node];
+            }else{
+//                if(!isset($ptr[$node])) $ptr[$node]=array();
+                $ptr =& $ptr[$node];
+            }
+            $level++;
+        }
+
+        $total=0;
+        foreach($ptr['time'] as $time){
+            $total+=$time;
+        }
+        return $time;
     }
 
     public function data(){
