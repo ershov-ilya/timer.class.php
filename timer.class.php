@@ -43,7 +43,7 @@ class Timer
         if(DEBUG) print "Start $name\n";
         $this->state[$name]=true;
 
-        $ptr =& $this->getNode($name);
+        $ptr =& $this->getNode($name, true);
 
         $ptr['_start']=microtime(true);
         return true;
@@ -58,7 +58,7 @@ class Timer
         if(DEBUG) print "Stop $name\n";
         $this->state[$name]=false;
 
-        $ptr =& $this->getNode($name, false);
+        $ptr =& $this->getNode($name);
 
         if(!isset($ptr['_time'])) $ptr['_time']=array();
         $time=$stoptime-$ptr['_start'];
@@ -86,7 +86,7 @@ class Timer
         $name=trim($name,$this->config['query_delimiter']);
         $time=microtime(true);
 
-        $ptr =& $this->getNode($name, false);
+        $ptr =& $this->getNode($name);
 
         $total=0;
         if(isset($ptr['_time'])) {
@@ -99,7 +99,7 @@ class Timer
         return $total;
     }
 
-    private function &getNode($name, $create=true){
+    private function &getNode($name, $create=false){
         $name=trim($name,$this->config['query_delimiter']);
         $path=$this->parse($name);
         $ptr=null;
