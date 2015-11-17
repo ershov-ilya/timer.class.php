@@ -40,12 +40,14 @@ class Timer
             if(DEBUG) print "Double start $name - ignore\n";
             return false;
         }
+        $name=trim($name,$this->config['query_delimiter']);
         if(DEBUG) print "Start $name\n";
         $this->state[$name]=true;
 
         $ptr =& $this->getNode($name, true);
 
         $ptr['_start']=microtime(true);
+        $ptr['_state']='ON';
         return true;
     }
 
@@ -63,6 +65,7 @@ class Timer
         if(!isset($ptr['_time'])) $ptr['_time']=array();
         $time=$stoptime-$ptr['_start'];
         $ptr['_time'][]=$time;
+        $ptr['_state']='OFF';
         unset($ptr['_start']);
         return true;
     }
@@ -111,6 +114,7 @@ class Timer
                 if($create && !isset($this->data[$node])) {
                     $this->data[$node]=array();
                     $this->data[$node]['_name']=$node;
+                    $this->data[$node]['_state']='OFF';
                 }
                 $ptr =& $this->data[$node];
             }else{
