@@ -11,7 +11,7 @@
 
 
 header( 'Content-Type: text/plain; charset=utf-8' ) ;
-define('DEBUG' , true) ;
+//define('DEBUG' , true) ;
 defined( 'DEBUG') or define('DEBUG' , false) ;
 
 if( DEBUG ){
@@ -32,5 +32,11 @@ $timer->start('db:query');
 sleep(1);
 $timer->stop('db:query');
 $timer->stopAll();
-print_r($timer->data());
+$timer->start('db:undefined');
+sleep(1.5);
+print $timer;
+sleep(1.5);
+$timer->stopAll();
+
+//print_r($timer->data());
 print $timer;

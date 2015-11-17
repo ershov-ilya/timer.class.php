@@ -7,7 +7,6 @@
  * Time: 10:26
  */
 
-
 class Timer
 {
     private $state;
@@ -32,8 +31,8 @@ class Timer
     }
 
     public function start($name=0){
-        if($this->state[$name]) {
-            if(DEBUG) print "Double start $name\n";
+        if(isset($this->state[$name]) && $this->state[$name]) {
+            if(DEBUG) print "Double start $name - ignore\n";
             return false;
         }
         if(DEBUG) print "Start $name\n";
@@ -59,7 +58,7 @@ class Timer
     public function stop($name){
         $stoptime=microtime(true);
         if(!$this->state[$name]) {
-            if(DEBUG) print "Double stop $name\n";
+            if(DEBUG) print "Double stop $name - ignore\n";
             return false;
         }
         if(DEBUG) print "Stop $name\n";
@@ -95,11 +94,15 @@ class Timer
     public function __toString(){
         $output="";
         if(DEBUG) $output="Debug mode\n";
+        foreach($this->state as $name => $state){
+            $output.="$name=".$this($name)."\n";
+        }
         return $output;
     }
 
     public function __invoke($name){
-        if(DEBUG) print "Invoke method $name\n";
+        $time=microtime(true);
+//        if(DEBUG) print "Invoke method $name\n";
         $path=$this->parse($name);
         $ptr=null;
         $level=0;
@@ -115,10 +118,13 @@ class Timer
         }
 
         $total=0;
-        foreach($ptr['time'] as $time){
-            $total+=$time;
+        if(isset($ptr['time'])) {
+            foreach ($ptr['time'] as $time) {
+                $total += $time;
+            }
         }
-        return $time;
+        if($this->state[$name] && isset($ptr['start'])) $total+=$time-$ptr['start'];
+        return $total;
     }
 
     public function data(){
