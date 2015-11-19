@@ -18,7 +18,8 @@ class Timer
         $config=array(
             'query_delimiter'   =>  ':',
             'output_delimiter'  =>  '=',
-            'add_children_time'  => true
+            'add_children_time' => true,
+            'debug'             => false
         );
         $this->config=$config=array_merge($config, $props);
         $this->state=array();
@@ -38,11 +39,11 @@ class Timer
         if(empty($name)) return false;
         if($parents) return $this->startParents($name);
         if(isset($this->state[$name]) && $this->state[$name]) {
-            if(DEBUG) print "Double start $name - ignore\n";
+            if($this->config['debug']) print "Double start $name - ignore\n";
             return false;
         }
         $name=trim($name,$this->config['query_delimiter']);
-        if(DEBUG) print "Start $name\n";
+        if($this->config['debug']) print "Start $name\n";
         $this->state[$name]=true;
 
         $ptr =& $this->getNode($name, true);
@@ -68,10 +69,10 @@ class Timer
     public function stop($name){
         $stoptime=microtime(true);
         if(!isset($this->state[$name]) || !$this->state[$name]) {
-            if(DEBUG) print "Double stop $name - ignore\n";
+            if($this->config['debug']) print "Double stop $name - ignore\n";
             return false;
         }
-        if(DEBUG) print "Stop $name\n";
+        if($this->config['debug']) print "Stop $name\n";
         $this->state[$name]=false;
 
         $ptr =& $this->getNode($name);
@@ -86,9 +87,9 @@ class Timer
     public function stopTree($name){
         $name=trim($name,$this->config['query_delimiter']);
         foreach($this->state as $timer => $state){
-            if(DEBUG) print "Check $timer\n";
+            if($this->config['debug']) print "Check $timer\n";
             if(strpos($timer, $name)>-1){
-                if(DEBUG) print "Match $timer\n";
+                if($this->config['debug']) print "Match $timer\n";
                 $this->stop($timer);
             }
         }
@@ -96,14 +97,14 @@ class Timer
     }
 
     public function stopAll(){
-        if(DEBUG) print "Stop all $name\n";
+        if($this->config['debug']) print "Stop all $name\n";
         foreach($this->state as $k=>$v){
             if($v===true) $this->stop($k);
         }
     }
     public function __toString(){
         $output="";
-        if(DEBUG) $output="Debug mode\n";
+        if($this->config['debug']) $output="Debug mode\n";
         foreach($this->state as $name => $status){
             $output.="$name".$this->config['output_delimiter'].$this($name)."\n";
         }
