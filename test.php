@@ -18,17 +18,18 @@ if( DEBUG ){
     ini_set( "display_errors" , 1 ) ;
 }
 
-require_once('timer.class.php');
+require_once('dist/timer.class.php');
 $timer=new Timer(array(
     'debug'=>true
 ));
 $timer->start('mysql:sql:query:response:parsing',true);
 $timer->start('postgres:sql:query:response:parsing');
-sleep(1);
+usleep(300000);
 print_r($timer->data());
-print $timer;
+$timer->stop('query');
 $timer->start('file:read');
-sleep(1);
+usleep(500000);
 $timer->stopTree('mysql');
 print_r($timer->data());
+print $timer;
 
