@@ -74,4 +74,4 @@ $timer=new Timer($config);
 ```
 
 ### PHPUnit test
-`phpunit --bootstrap dist/timer.class.php tests\TimerTest.php`
+	phpunit --repeat 200 --bootstrap dist/timer.class.php tests\TimerTest.php
