@@ -1,3 +1,8 @@
+[![Latest Stable Version](https://poser.pugx.org/ershov-ilya/timer.class.php/v/stable)](https://packagist.org/packages/ershov-ilya/timer.class.php)
+[![Total Downloads](https://poser.pugx.org/ershov-ilya/timer.class.php/downloads)](https://packagist.org/packages/ershov-ilya/timer.class.php)
+[![Latest Unstable Version](https://poser.pugx.org/ershov-ilya/timer.class.php/v/unstable)](https://packagist.org/packages/ershov-ilya/timer.class.php) 
+[![License](https://poser.pugx.org/ershov-ilya/timer.class.php/license)](https://packagist.org/packages/ershov-ilya/timer.class.php)
+
 # Multi timer
 with tree-structured dependences
 
