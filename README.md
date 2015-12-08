@@ -9,8 +9,8 @@ $timer->start('mysql');
 sleep(1);
 print $timer('mysql');
 $timer->stop('mysql');
-print_r($timer->data()); // Массив с результатами
-print $timer; // Вывести отчёт
+print_r($timer->data()); // Results array
+print $timer; // Print report
 ```
 
 This class can create timers with dependencies, counters will be stored in a tree structure.
@@ -19,8 +19,8 @@ __invoke function returns current time gaps sum, with NO stop it.
 
 So here are advanced methods:
 ```
-$timer->start('mysql:sql:query:response:parsing', true); // Второй параметр true говорит, что нужно стартануть все таймеры-родители
-$timer->stopTree('mysql'); // Остановить всё дерево mysql
+$timer->start('mysql:sql:query:response:parsing', true); // Second parameter in "true" says to start all parent-timers
+$timer->stopTree('mysql'); // Stop timers tree "mysql"
 ```
 
 ### Advanced code example
