@@ -1,5 +1,5 @@
 {
-    "name": "Multi Timer",
+    "name": "ershov-ilya/multi-timer",
     "description": "Multi timer with tree-structured dependences",
     "type": "library",
     "license": "MIT",
