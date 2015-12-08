@@ -5,10 +5,19 @@ with tree-structured dependences
 ```
 require_once('timer.class.php');
 $timer=new Timer();
+
+// Default timer (unnamed)
+$timer->start();
+sleep(1);
+$timer->stop();
+print $timer();
+
+// Named timer
 $timer->start('mysql');
 sleep(1);
-print $timer('mysql');
+print $timer('mysql'); // Get value before timer stop - works OK too
 $timer->stop('mysql');
+
 print_r($timer->data()); // Results array
 print $timer; // Print report
 ```
