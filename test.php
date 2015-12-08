@@ -22,6 +22,16 @@ require_once('dist/timer.class.php');
 $timer=new Timer(array(
     'debug'=>true
 ));
+$timer->start('one');
+usleep(100000);
+$timer->stopAll();
+$timer->start();
+usleep(100000);
+$timer->stopAll();
+print $timer;
+exit;
+
+$timer->start('file:read');
 $timer->start('mysql:sql:query:response:parsing',true);
 $timer->start('postgres:sql:query:response:parsing');
 usleep(300000);

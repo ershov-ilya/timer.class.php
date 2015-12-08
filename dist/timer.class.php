@@ -35,7 +35,7 @@ class Timer
         return explode($this->config['query_delimiter'], $name);
     }
 
-    public function start($name, $parents=false){
+    public function start($name='default', $parents=false){
         if(empty($name)) return false;
         if($parents) return $this->startParents($name);
         if(isset($this->state[$name]) && $this->state[$name]) {
@@ -66,7 +66,7 @@ class Timer
         return true;
     }
 
-    public function stop($name){
+    public function stop($name='default'){
         $stoptime=microtime(true);
         if(!isset($this->state[$name]) || !$this->state[$name]) {
             if($this->config['debug']) print "Double stop $name - ignore\n";
@@ -111,7 +111,7 @@ class Timer
         return $output;
     }
 
-    public function __invoke($name){
+    public function __invoke($name='default'){
         $name=trim($name,$this->config['query_delimiter']);
         $time=microtime(true);
 
