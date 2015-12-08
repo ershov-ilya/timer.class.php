@@ -51,10 +51,10 @@ $timer->start('file');
 $timer->start('mysql.sql.query.response.parsing',true);
 $timer->start('postgres.sql.query.response.parsing');
 usleep(300000);
-$timer->stopTree('response');
+$timer->stopTree('mysql.sql.query');
 usleep(200000);
 $timer->start('file.read');
 usleep(400000);
-$timer->stopTree('mysql');
+$timer->stopAll();
 print $timer;
 
