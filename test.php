@@ -24,22 +24,21 @@ $timer=new Timer(array(
 ));
 $timer->start('one');
 usleep(100000);
-$timer->stopAll();
+$timer->stop('one');
 $timer->start();
 usleep(100000);
-$timer->stopAll();
+$timer->stop();
 print $timer;
-exit;
+//exit;
 
-$timer->start('file:read');
-$timer->start('mysql:sql:query:response:parsing',true);
-$timer->start('postgres:sql:query:response:parsing');
+$timer->start('file');
+$timer->start('mysql.sql.query.response.parsing',true);
+$timer->start('postgres.sql.query.response.parsing');
 usleep(300000);
-print_r($timer->data());
-$timer->stop('query');
-$timer->start('file:read');
-usleep(500000);
+$timer->stopTree('response');
+usleep(200000);
+$timer->start('file.read');
+usleep(400000);
 $timer->stopTree('mysql');
-print_r($timer->data());
 print $timer;
 

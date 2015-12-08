@@ -19,7 +19,7 @@ __invoke function returns current time gaps sum, with NO stop it.
 
 So here are advanced methods:
 ```
-$timer->start('mysql:sql:query:response:parsing', true); // Second parameter in "true" says to start all parent-timers
+$timer->start('mysql.sql.query.response.parsing', true); // Second parameter in "true" says to start all parent-timers
 $timer->stopTree('mysql'); // Stop timers tree "mysql"
 ```
 
@@ -29,12 +29,12 @@ require_once('timer.class.php');
 $timer=new Timer(array(
 'debug'=>true
 ));
-$timer->start('mysql:sql:query:response:parsing',true);
-$timer->start('postgres:sql:query:response:parsing');
+$timer->start('mysql.sql.query.response.parsing',true);
+$timer->start('postgres.sql.query.response.parsing');
 sleep(1);
 print_r($timer->data());
 print $timer;
-$timer->start('file:read');
+$timer->start('file.read');
 sleep(1);
 $timer->stopTree('mysql');
 print_r($timer->data());
@@ -43,7 +43,7 @@ print_r($timer->data());
 The class is configurable via config array, which can be passed as parameter of class constructor
 ```
 $config=array(
-    'query_delimiter'   =>  ':',
+    'query_delimiter'   =>  '.',
     'output_delimiter'  =>  '=',
     'add_children_time' => true,
     'debug'             => false

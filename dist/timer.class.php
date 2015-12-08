@@ -16,7 +16,7 @@ class Timer
 
     public function __construct($props=array()){
         $config=array(
-            'query_delimiter'   =>  ':',
+            'query_delimiter'   =>  '.',
             'output_delimiter'  =>  '=',
             'add_children_time' => true,
             'debug'             => false
