@@ -1,0 +1,14 @@
+{
+    "name": "ershov-ilya/timer.class.php",
+    "description": "Multi timer with tree-structured dependences",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "ILYA ERSHOV",
+            "email": "ershov.ilya@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {}
+}
