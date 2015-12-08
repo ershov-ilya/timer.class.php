@@ -8,15 +8,28 @@ $timer=new Timer();
 
 // Default timer (unnamed)
 $timer->start();
-sleep(1);
+usleep(200000);
 $timer->stop();
 print $timer();
 
 // Named timer
 $timer->start('mysql');
-sleep(1);
+usleep(300000);
 print $timer('mysql'); // Get value before timer stop - works OK too
 $timer->stop('mysql');
+
+// Sum of gaps
+$timer->start('gap');
+usleep(100000);
+$timer->stop('gap');
+$timer->start('gap');
+usleep(200000);
+$timer->stop('gap');
+$timer->start('gap');
+usleep(300000);
+$timer->stop('gap');
+// Get sum of all gaps
+print $timer('gap'); // returns ~ 0.6 (sec)
 
 print_r($timer->data()); // Results array
 print $timer; // Print report
@@ -40,12 +53,12 @@ $timer=new Timer(array(
 ));
 $timer->start('mysql.sql.query.response.parsing',true);
 $timer->start('postgres.sql.query.response.parsing');
-sleep(1);
+usleep(200000);
 print_r($timer->data());
 print $timer;
 $timer->start('file.read');
-sleep(1);
 $timer->stopTree('mysql');
+usleep(300000);
 print_r($timer->data());
 ```
 

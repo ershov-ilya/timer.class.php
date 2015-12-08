@@ -22,14 +22,30 @@ require_once('dist/timer.class.php');
 $timer=new Timer(array(
     'debug'=>true
 ));
+
+// Default timer (unnamed)
+$timer->start();
+usleep(500000);
+$timer->stop();
+print 'Unnamed time result: '.$timer().PHP_EOL;
+
 $timer->start('one');
 usleep(100000);
 $timer->stop('one');
-$timer->start();
-usleep(100000);
-$timer->stop();
 print $timer;
-//exit;
+
+// Sum of gaps
+$timer->start('gap');
+usleep(100000);
+$timer->stop('gap');
+$timer->start('gap');
+usleep(200000);
+$timer->stop('gap');
+$timer->start('gap');
+usleep(300000);
+$timer->stop('gap');
+// Get sum of all gaps
+print 'Get sum of all gaps: '.$timer('gap').PHP_EOL; // returns ~ 0.6 (sec)
 
 $timer->start('file');
 $timer->start('mysql.sql.query.response.parsing',true);
