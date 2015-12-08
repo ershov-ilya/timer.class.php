@@ -72,3 +72,6 @@ $config=array(
 );
 $timer=new Timer($config);
 ```
+
+### PHPUnit test
+`phpunit --bootstrap dist/timer.class.php tests\TimerTest.php`
