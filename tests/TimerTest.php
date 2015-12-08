@@ -1,15 +1,18 @@
 ﻿<?php
 class TimerTest extends PHPUnit_Framework_TestCase
 {
-    public function testCanBeNegated()
+    public function testSimpleTimerAccuracy()
     {
-        // Arrange
-        $a = new Money(1);
+		// Init
+        $timer=new Timer();
 
-        // Act
-        $b = $a->negate();
-
+        // Process
+		$timer->start();
+		usleep(100000);
+		$timer->stop();
+		$value=$timer();
+		
         // Assert
-        $this->assertEquals(-1, $b->getAmount());
+        $this->assertEquals(true, ($value<0.15 && $value>0.05));
     }
 }
